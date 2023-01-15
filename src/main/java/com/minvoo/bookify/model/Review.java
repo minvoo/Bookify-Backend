@@ -8,7 +8,7 @@ import java.util.Date;
 
 @Data
 @Entity
-@Table(name="reviews")
+@Table(name="review")
 public class Review {
 
     @Id
@@ -26,7 +26,6 @@ public class Review {
     private double rating;
 
     @Column(name="book_id")
-    @
     private Long bookId;
 
     @Column(name="review_description")
