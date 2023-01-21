@@ -37,5 +37,7 @@ public class BookService {
         Checkout checkout = new Checkout(userEmail, LocalDate.now().toString(), LocalDate.now().plusDays(7).toString(), bookId);
         checkoutRepository.save(checkout);
 
+        return bookOptional.get();
+
     }
 }
