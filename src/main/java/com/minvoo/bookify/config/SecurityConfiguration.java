@@ -19,7 +19,8 @@ public class SecurityConfiguration {
 
         // Protect endpoints at /api/<type>/secure
         http.authorizeRequests(configurer ->
-                configurer.antMatchers("/api/books/secure/**").authenticated())
+                configurer.antMatchers("/api/books/secure/**",
+                        "/api/reviews/secure/**").authenticated())
                 .oauth2ResourceServer().jwt();
 
         //Add cors filter to API endpoints
