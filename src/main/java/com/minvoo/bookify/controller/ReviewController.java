@@ -22,8 +22,11 @@ public class ReviewController {
     public Boolean reviewBookByUser(@RequestHeader(value = "Authorization") String token,
                                     @RequestParam Long bookId) throws Exception {
 
-        String userEmail = validateUserEmail(token);
+        String userEmail = ExtractJWT.payloadJWTExtraction(token, "\"sub\"");
 
+        if (userEmail == null) {
+            throw new Exception("User email is missing");
+        }
         return reviewService.userReviewListed(userEmail, bookId);
     }
 
@@ -31,7 +34,11 @@ public class ReviewController {
     public void postReview(@RequestHeader(value = "Authorization") String token,
                            @RequestBody ReviewRequest reviewRequest) throws Exception {
 
-        String userEmail = validateUserEmail(token);
+        String userEmail = ExtractJWT.payloadJWTExtraction(token, "\"sub\"");
+        System.out.println(userEmail);
+        if (userEmail == null) {
+            throw new Exception("User email is missing");
+        }
         reviewService.postReview(userEmail, reviewRequest);
     }
 
