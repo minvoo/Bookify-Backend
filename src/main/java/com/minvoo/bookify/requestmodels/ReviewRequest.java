@@ -1,7 +1,10 @@
 package com.minvoo.bookify.requestmodels;
 
+import lombok.Data;
+
 import java.util.Optional;
 
+@Data
 public class ReviewRequest {
 
     private double rating;
