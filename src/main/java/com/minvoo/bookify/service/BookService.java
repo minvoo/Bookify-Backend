@@ -4,12 +4,17 @@ import com.minvoo.bookify.model.Book;
 import com.minvoo.bookify.model.Checkout;
 import com.minvoo.bookify.repository.BookRepository;
 import com.minvoo.bookify.repository.CheckoutRepository;
+import com.minvoo.bookify.responsemodels.ShelfCurrentLoansResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @Transactional
@@ -46,12 +51,44 @@ public class BookService {
 
         if (validateCheckout != null) {
             return true;
-        } else  {
+        } else {
             return false;
         }
     }
 
     public int currentLoansCount(String userEmail) {
         return checkoutRepository.findBooksByUserEmail(userEmail).size();
+    }
+
+    public List<ShelfCurrentLoansResponse> currentLoans(String userEmail) throws Exception {
+
+        List<ShelfCurrentLoansResponse> shelfCurrentLoansResponses = new ArrayList<>();
+        List<Checkout> checkoutList = checkoutRepository.findBooksByUserEmail(userEmail);
+        List<Long> bookIdList = new ArrayList<>();
+
+        for (Checkout checkout : checkoutList) {
+            bookIdList.add(checkout.getBookId());
+        }
+
+        List<Book> books = bookRepository.findBooksByBookIds(bookIdList);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+        for (Book book : books) {
+            Optional<Checkout> checkout = checkoutList.stream()
+                    .filter(x -> x.getBookId() == book.getId())
+                    .findFirst();
+
+            if (checkout.isPresent()) {
+                Date d1 = simpleDateFormat.parse(checkout.get().getReturnDate());
+                Date d2 = simpleDateFormat.parse(LocalDate.now().toString());
+
+                TimeUnit time = TimeUnit.DAYS;
+
+                long difference_in_time = time.convert(d1.getTime() - d2.getTime(), TimeUnit.MILLISECONDS);
+
+                shelfCurrentLoansResponses.add(new ShelfCurrentLoansResponse(book, (int) difference_in_time));
+            }
+        }
+        return shelfCurrentLoansResponses;
     }
 }
