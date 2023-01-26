@@ -55,7 +55,7 @@ public class BookController {
         bookService.returnBook(userEmail, bookId);
     }
 
-    @PutMapping("/secur/renew")
+    @PutMapping("/secure/renew")
     public void  renewLoan(@RequestHeader(value = "Authorization")String token,
                            @RequestParam Long bookId)  throws Exception {
 

@@ -2,8 +2,10 @@ package com.minvoo.bookify.service;
 
 import com.minvoo.bookify.model.Book;
 import com.minvoo.bookify.model.Checkout;
+import com.minvoo.bookify.model.History;
 import com.minvoo.bookify.repository.BookRepository;
 import com.minvoo.bookify.repository.CheckoutRepository;
+import com.minvoo.bookify.repository.HistoryRepository;
 import com.minvoo.bookify.responsemodels.ShelfCurrentLoansResponse;
 import org.hibernate.annotations.Check;
 import org.springframework.stereotype.Service;
@@ -25,9 +27,12 @@ public class BookService {
 
     private CheckoutRepository checkoutRepository;
 
-    public BookService(BookRepository bookRepository, CheckoutRepository checkoutRepository) {
+    private HistoryRepository historyRepository;
+
+    public BookService(BookRepository bookRepository, CheckoutRepository checkoutRepository, HistoryRepository historyRepository) {
         this.bookRepository = bookRepository;
         this.checkoutRepository = checkoutRepository;
+        this.historyRepository = historyRepository;
     }
 
     public Book checkoutBook(String userEmail, Long bookId) throws Exception {
@@ -104,6 +109,17 @@ public class BookService {
         book.get().setCopiesAvailable(book.get().getCopiesAvailable()+1);
         bookRepository.save(book.get());
         checkoutRepository.deleteById(validateCheckout.getId());
+
+        History history= new History(
+                userEmail,
+                validateCheckout.getCheckoutDate(),
+                LocalDate.now().toString(),
+                book.get().getTitle(),
+                book.get().getAuthor(),
+                book.get().getDescription(),
+                book.get().getImg()
+        );
+        historyRepository.save(history);
     }
 
     public void renewLoan(String userEmail, Long bookId) throws Exception {
