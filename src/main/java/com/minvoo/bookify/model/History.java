@@ -8,6 +8,7 @@ import javax.persistence.*;
 @Data
 @Table(name = "history")
 @Entity
+
 public class History {
 
     @Id
@@ -39,5 +40,9 @@ public class History {
         this.author = author;
         this.description = description;
         this.img = img;
+    }
+
+    public History() {
+
     }
 }

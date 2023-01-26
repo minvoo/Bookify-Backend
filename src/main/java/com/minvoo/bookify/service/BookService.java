@@ -110,7 +110,7 @@ public class BookService {
         bookRepository.save(book.get());
         checkoutRepository.deleteById(validateCheckout.getId());
 
-        History history= new History(
+        History history = new History(
                 userEmail,
                 validateCheckout.getCheckoutDate(),
                 LocalDate.now().toString(),
@@ -119,6 +119,7 @@ public class BookService {
                 book.get().getDescription(),
                 book.get().getImg()
         );
+        System.out.println(history);
         historyRepository.save(history);
     }
 
