@@ -5,6 +5,7 @@ import com.minvoo.bookify.model.Checkout;
 import com.minvoo.bookify.repository.BookRepository;
 import com.minvoo.bookify.repository.CheckoutRepository;
 import com.minvoo.bookify.responsemodels.ShelfCurrentLoansResponse;
+import org.hibernate.annotations.Check;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -90,5 +91,18 @@ public class BookService {
             }
         }
         return shelfCurrentLoansResponses;
+    }
+
+    public void returnBook(String userEmail, Long bookId) throws Exception {
+        Optional<Book> book = bookRepository.findById(bookId);
+
+        Checkout validateCheckout = checkoutRepository.findByUserEmailAndBookId(userEmail, bookId);
+
+        if (!book.isPresent() || validateCheckout == null) {
+            throw new Exception("Book does not exist or not checked by user");
+        }
+        book.get().setCopiesAvailable(book.get().getCopiesAvailable()+1);
+        bookRepository.save(book.get());
+        checkoutRepository.deleteById(validateCheckout.getId());
     }
 }
