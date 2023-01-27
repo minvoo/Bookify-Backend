@@ -24,4 +24,16 @@ public class Message {
     @Column(name="question")
     private String question;
 
+    @Column(name="admin_email")
+    private String adminEmail;
+
+    @Column(name="response")
+    private String response;
+    @Column(name="closed")
+    private boolean closed;
+
+    public Message(String title, String question) {
+        this.title = title;
+        this.question = question;
+    }
 }
