@@ -1,6 +1,7 @@
 package com.minvoo.bookify.config;
 
 import com.minvoo.bookify.model.Book;
+import com.minvoo.bookify.model.Message;
 import com.minvoo.bookify.model.Review;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
@@ -25,8 +26,10 @@ public class DataRestConfig implements RepositoryRestConfigurer {
 
         config.exposeIdsFor(Book.class);
         config.exposeIdsFor(Review.class);
+        config.exposeIdsFor(Message.class);
         disableHttpMethods(Book.class, config, theUnsupportedActions);
         disableHttpMethods(Review.class, config, theUnsupportedActions);
+        disableHttpMethods(Message.class, config, theUnsupportedActions);
 
 
         /*Cors mapings*/
