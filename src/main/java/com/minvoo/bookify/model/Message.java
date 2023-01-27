@@ -18,6 +18,8 @@ public class Message {
     @Column(name="id")
     private Long id;
 
+    @Column(name="user_email")
+    private String userEmail;
     @Column(name="title")
     private String title;
 
