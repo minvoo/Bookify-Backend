@@ -1,6 +1,7 @@
 package com.minvoo.bookify.controller;
 
 import com.minvoo.bookify.model.Message;
+import com.minvoo.bookify.requestmodels.AdminQuestionRequest;
 import com.minvoo.bookify.service.MessageService;
 import com.minvoo.bookify.utils.ExtractJWT;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,5 +25,18 @@ public class MessagesController {
 
         String userEmail = ExtractJWT.payloadJWTExtraction(token, "\"sub\"");
         messageService.postMessage(messageRequest, userEmail);
+    }
+
+    @PutMapping("/secure/admin/message")
+    public void putMessage(@RequestHeader(value = "Authorization") String token,
+                           @RequestBody AdminQuestionRequest adminQuestionRequest) throws Exception {
+
+        String userEmail = ExtractJWT.payloadJWTExtraction(token, "\"sub\"");
+        String admin = ExtractJWT.payloadJWTExtraction(token, "\"userType\"");
+
+        if (admin == null || !admin.equals("admin")) {
+            throw new Exception("Administration page only.");
+        }
+        messageService.putMessage(adminQuestionRequest, userEmail);
     }
 }
