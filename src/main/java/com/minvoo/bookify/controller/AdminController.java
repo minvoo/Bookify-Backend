@@ -49,7 +49,7 @@ public class AdminController {
         adminService.decreaseBookQuantity(bookId);
     }
 
-    @PostMapping("/secure/delete/book")
+    @DeleteMapping("/secure/delete/book")
     public void deleteBook(@RequestHeader(value = "Authorization") String token,
                                      @RequestParam Long bookId) throws Exception {
         String admin = ExtractJWT.payloadJWTExtraction(token, "\"userType\"");

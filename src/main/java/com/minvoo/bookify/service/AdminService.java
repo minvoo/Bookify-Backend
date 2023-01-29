@@ -59,12 +59,13 @@ public class AdminService {
 
     public void deleteBook(Long bookId) throws Exception {
 
-        Optional<Book> bookOptional = bookRepository.findById(bookId);
+        Optional<Book> book = bookRepository.findById(bookId);
 
-        if(!bookOptional.isPresent()) {
-            throw new Exception("Book with given id not found");
+        if (!book.isPresent()) {
+            throw new Exception("Book not found");
         }
-        bookRepository.deleteById(bookId);
+
+        bookRepository.delete(book.get());
         checkoutRepository.deleteAllByBookId(bookId);
         reviewRepository.deleteAllByBookId(bookId);
     }
